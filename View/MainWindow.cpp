@@ -1,5 +1,7 @@
 #include "MainWindow.h"
 #include "../Controller/binController.h"
+#include <QKeyEvent>
+//#include <QShortcut>
 
 MainWindow::MainWindow(binController* controller, QWidget *parent):
   QMainWindow(parent), ctrl(controller), btns(19),
@@ -8,6 +10,10 @@ MainWindow::MainWindow(binController* controller, QWidget *parent):
     centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
     setFixedSize(270,600);
+    /*QShortcut* s = new QShortcut(this);
+    s->setKey(Qt::CTRL + Qt::Key_S);*/
+
+    setFocusPolicy(Qt::StrongFocus);
 
     dataTypeBox = new QGroupBox("Choose Type", centralWidget);
 
@@ -97,6 +103,7 @@ MainWindow::MainWindow(binController* controller, QWidget *parent):
     connect(btns[16], SIGNAL(clicked()), this, SLOT(operatorClicked()));
     connect(btns[17], SIGNAL(clicked()), this, SLOT(clear()));
     connect(btns[18], SIGNAL(clicked()), this, SLOT(clearall()));
+    //connect(s,SIGNAL(activated()),this,SLOT(switchType()));
 
     connect(rbtns[0], SIGNAL(clicked()), this, SLOT(converToSigMag()));
     connect(rbtns[0], SIGNAL(clicked()), this, SLOT(setSigMag()));
@@ -111,6 +118,86 @@ MainWindow::MainWindow(binController* controller, QWidget *parent):
     connect(this,SIGNAL(VtCTwosComp(QVector<QString>)),ctrl,SIGNAL(CtMTwosComp(QVector<QString>)));
     connect(this,SIGNAL(VtCFloat16(QVector<QString>)),ctrl,SIGNAL(CtMFloat16(QVector<QString>)));
     connect(this,SIGNAL(VtCDec(QVector<QString>)),ctrl,SIGNAL(CtMDec(QVector<QString>)));
+}
+
+void MainWindow::switchType(){
+  /*short int i=0;
+  while(i<rbtns.size() && !rbtns[i]->isChecked())
+    ++i;
+  if(i==3) i = 0;
+  else ++i;
+  emit rbtns[i]->clicked();*/
+}
+void MainWindow::keyPressEvent(QKeyEvent* event){
+  int i = event->key();
+  switch (i) {
+    case 42: //*
+      emit btns[13]->clicked();
+      break;
+    case 43: //+
+      emit btns[11]->clicked();
+      break;
+    case 44: //,
+      emit btns[10]->clicked();
+      break;
+    case 45: //-
+      emit btns[12]->clicked();
+      break;
+    case 46: //.
+      emit btns[10]->clicked();
+      break;
+    case 47:
+      emit btns[14]->clicked();
+      break;
+    case 48: //0
+      emit btns[0]->clicked();
+      break;
+    case 49: //1
+      emit btns[1]->clicked();
+      break;
+    case 50: //2
+      emit btns[2]->clicked();
+      break;
+    case 51: //3
+      emit btns[3]->clicked();
+      break;
+    case 52: //4
+      emit btns[4]->clicked();
+      break;
+    case 53: //5
+      emit btns[5]->clicked();
+      break;
+    case 54: //6
+      emit btns[6]->clicked();
+      break;
+    case 55: //7
+      emit btns[7]->clicked();
+      break;
+    case 56: //8
+      emit btns[8]->clicked();
+      break;
+    case 57: //9
+      emit btns[9]->clicked();
+      break;
+    case 16777216: //escape
+      emit btns[18]->clicked();
+      break;
+    case 16777219: //backspace
+      emit btns[17]->clicked();
+      break;
+    default:
+      if(event->key()==Qt::Key_Enter || event->key()==Qt::Key_Return)
+	emit btns[15]->clicked();
+      /*else if(event->key()==Qt::Key_Tab){
+	bool isChecked=false; int i=0;
+	while(i<rbtns.size() && !isChecked){
+	  isChecked = rbtns[i]->isChecked() ? true : false;
+	  ++i;
+	}
+
+      }*/
+      break;
+  }
 }
 void MainWindow::setSigMag(){
   currDataT = "sigMag";

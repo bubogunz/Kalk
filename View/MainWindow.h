@@ -33,6 +33,8 @@ private:
     QVector<QCustomBtn*> btns;
     QVector<QRadioButton*> rbtns;
 
+    void keyPressEvent(QKeyEvent*);
+
 public:
     MainWindow(binController*, QWidget *parent = 0);
     ~MainWindow();
@@ -44,6 +46,7 @@ private slots:
     void clear();
     void clearall();
     void operatorClicked();
+    void switchType();
     void converToSigMag();
     void converToTwosComp();
     void converToFloat16();
