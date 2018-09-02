@@ -1,7 +1,7 @@
 #include "MainWindow.h"
 #include "../Controller/binController.h"
 #include <QKeyEvent>
-//#include <QShortcut>
+#include <QShortcut>
 
 MainWindow::MainWindow(binController* controller, QWidget *parent):
   QMainWindow(parent), ctrl(controller), btns(19),
@@ -10,8 +10,8 @@ MainWindow::MainWindow(binController* controller, QWidget *parent):
     centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
     setFixedSize(270,600);
-    /*QShortcut* s = new QShortcut(this);
-    s->setKey(Qt::CTRL + Qt::Key_S);*/
+    QShortcut* s = new QShortcut(this);
+    s->setKey(Qt::CTRL + Qt::Key_T);
 
     setFocusPolicy(Qt::StrongFocus);
 
@@ -41,6 +41,8 @@ MainWindow::MainWindow(binController* controller, QWidget *parent):
     rbtns[2] = new QRadioButton("16-bit Floating Point",  centralWidget);
     rbtns[3] = new QRadioButton("Decimal", centralWidget);
 
+    for(int i=0; i<rbtns.size(); ++i)
+      rbtns[i]->setCheckable(true);
     rbtns[3] -> setChecked(true);
 
     display = new QLineEdit("0", centralWidget);
@@ -103,7 +105,7 @@ MainWindow::MainWindow(binController* controller, QWidget *parent):
     connect(btns[16], SIGNAL(clicked()), this, SLOT(operatorClicked()));
     connect(btns[17], SIGNAL(clicked()), this, SLOT(clear()));
     connect(btns[18], SIGNAL(clicked()), this, SLOT(clearall()));
-    //connect(s,SIGNAL(activated()),this,SLOT(switchType()));
+    connect(s,SIGNAL(activated()),this,SLOT(switchType()));
 
     connect(rbtns[0], SIGNAL(clicked()), this, SLOT(converToSigMag()));
     connect(rbtns[0], SIGNAL(clicked()), this, SLOT(setSigMag()));
@@ -121,12 +123,14 @@ MainWindow::MainWindow(binController* controller, QWidget *parent):
 }
 
 void MainWindow::switchType(){
-  /*short int i=0;
-  while(i<rbtns.size() && !rbtns[i]->isChecked())
+  short int i=0, length = rbtns.size();
+  while(i<length && !rbtns[i]->isChecked())
     ++i;
-  if(i==3) i = 0;
+  rbtns[i]->setChecked(false);
+  if(i==length-1) i = 0;
   else ++i;
-  emit rbtns[i]->clicked();*/
+  rbtns[i]->setChecked(true);
+  emit rbtns[i]->clicked();
 }
 void MainWindow::keyPressEvent(QKeyEvent* event){
   int i = event->key();
@@ -188,14 +192,8 @@ void MainWindow::keyPressEvent(QKeyEvent* event){
     default:
       if(event->key()==Qt::Key_Enter || event->key()==Qt::Key_Return)
 	emit btns[15]->clicked();
-      /*else if(event->key()==Qt::Key_Tab){
-	bool isChecked=false; int i=0;
-	while(i<rbtns.size() && !isChecked){
-	  isChecked = rbtns[i]->isChecked() ? true : false;
-	  ++i;
-	}
-
-      }*/
+      else if(event->key()==Qt::Key_Delete)
+	emit btns[18]->clicked();
       break;
   }
 }

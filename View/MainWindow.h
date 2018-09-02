@@ -39,7 +39,6 @@ public:
     MainWindow(binController*, QWidget *parent = 0);
     ~MainWindow();
 
-
 private slots:
     void shownumber ();
     void showpoint();
